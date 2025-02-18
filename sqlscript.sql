@@ -28,3 +28,22 @@ group by team_1
  
 ;
 
+
+
+
+
+#complex query 2
+
+
+select customer_id, order_date,
+case when (select customer_id, order_date,
+(case when order_date = (select min(order_date) from customer_orders)then  1
+else 0
+end) as date_first )
+from customer_orders
+
+    
+
+
+
+
