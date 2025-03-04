@@ -16,11 +16,9 @@ INSERT INTO sales_data (product_name, revenue) VALUES
 ('Product B', 2800.00),
 ('Product C', 2300.00);
 
+with cte as (select product_name, sum(revenue) as total_sales, 
+sum(sum(revenue)) over(order by sum(revenue) desc ) as cumulative_sum,
+sum(sum(revenue)) over() as total_sum
+from sales_data group by product_name) 
 
-select * from
-( select Product_ID, sum(Sales) as s, 
-sum(sum(Sales)) over ( order by sum(Sales) desc ) as run_tot, 
-sum(sum(Sales)) over ( ) as tot_sales from orders 
-group by Product_ID )
-a 
-where run_tot <= 0.8*tot_sales;
+select * from cte where cumulative_sum <= 0.8 * total_sum
